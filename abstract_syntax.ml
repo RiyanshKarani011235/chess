@@ -1,11 +1,11 @@
 (* file on a chess board *)
-type file = A | B | C | D | E | F | G | H;;
+type file = int
 
 (* rank on a chess board *)
-type rank = R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8;;
+type rank = int
 
 (* square on a chess board *)
-type square = file * rank;;
+type square = file * rank
 
 (* types of pieces on a chess board *)
 type piece = 
@@ -13,20 +13,24 @@ type piece =
   | Queen
   | Rook
   | Bishop
-  | Knight;;
+  | Knight
+  | Pawn
+
+type color = White | Black
+
+type colored_piece = color * piece
 
 type move = 
   (* simple moves *)
-  | PawnMove of square
-  | PieceMove of piece * square
+  | Move of piece * square
 
   (* disambiguation moves *)
-  | DisambiguationUniqueFileMove of file * piece * square
-  | DisambiguationUniqueRankMove of rank * piece * square
-  | DisambiguationNoUniqueFileOrRankMove of file * rank * piece * square
+  | DisambiguationUniqueFileMove of file * move
+  | DisambiguationUniqueRankMove of rank * move
+  | DisambiguationNoUniqueFileOrRankMove of file * rank * move
 
   (* pawn promotion moves *)
-  | PawnMoveAndPromote of square * piece
+  | PawnPromotionMove of square * piece
 
   (* castling move *)
   | KingSideCastleMove
@@ -46,4 +50,8 @@ type move =
   | StaleMateMove of move
 
   (* draw move *)
-  | DrawMove;;
+  | DrawMove
+
+type game = 
+  | FinalMove of move
+  | Game of move * game
