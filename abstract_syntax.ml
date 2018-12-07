@@ -55,3 +55,8 @@ type move =
 type game = 
   | FinalMove of move
   | Game of move * game
+
+type strategy = 
+  | StrategicMove of move * strategy
+  | StrategicGame of game
+  | IfThenElse of colored_piece * square * strategy * strategy
