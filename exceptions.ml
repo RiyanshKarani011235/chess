@@ -1,2 +1,2 @@
-exception CompilationException
-exception RunTimeException
+exception SyntaxError
+exception SemanticsError

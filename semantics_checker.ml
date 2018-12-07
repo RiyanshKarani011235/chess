@@ -95,4 +95,5 @@ let is_valid_game_move = fun (src : square) (dst : square) (cp : colored_piece) 
 (* TODO: check if is_valid_move dynamically *)
 (* for example, disambiguation moves should be checked if they *)
 (* are in fact really disambiguation moves *)
+(* castles and checks should be checked if they are valid *)
 let is_valid_move = fun (m : move) (b : Board.board) : bool -> true

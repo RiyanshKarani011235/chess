@@ -96,4 +96,4 @@ let get_next_square = fun (src : square) (dst : square) : square ->
       (src_file - 1, src_rank - 1)
   else
     (* invalid *)
-    raise Exceptions.RunTimeException
+    raise Exceptions.SemanticsError

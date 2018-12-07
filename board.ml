@@ -129,11 +129,11 @@ let find_src = fun ?(file_known=false) ?(file=None) ?(rank_known=false) ?(rank=N
   if file_known && rank_known then
     let file = (match file with 
       | Some f -> f
-      | None -> raise Exceptions.RunTimeException) (* if file is known, then it needs to be passed in *)
+      | None -> raise Exceptions.SemanticsError) (* if file is known, then it needs to be passed in *)
     in
     let rank = (match rank with
       | Some r -> r
-      | None -> raise Exceptions.RunTimeException) (* if rank is known, then it needs to be passed in *)
+      | None -> raise Exceptions.SemanticsError) (* if rank is known, then it needs to be passed in *)
     in 
     Some (file, rank)
 
@@ -141,7 +141,7 @@ let find_src = fun ?(file_known=false) ?(file=None) ?(rank_known=false) ?(rank=N
   else if file_known then 
     let file = (match file with 
       | Some f -> f
-      | None -> raise Exceptions.RunTimeException) (* if file is known, then it needs to be passed in *)
+      | None -> raise Exceptions.SemanticsError) (* if file is known, then it needs to be passed in *)
     in  
     find_src_along_file c p dst b file
 
@@ -149,7 +149,7 @@ let find_src = fun ?(file_known=false) ?(file=None) ?(rank_known=false) ?(rank=N
   else if rank_known then 
     let rank = (match rank with
       | Some r -> r
-      | None -> raise Exceptions.RunTimeException) (* if rank is known, then it needs to be passed in *)
+      | None -> raise Exceptions.SemanticsError) (* if rank is known, then it needs to be passed in *)
     in
     find_src_along_rank c p dst b rank
 
@@ -162,18 +162,18 @@ let find_src = fun ?(file_known=false) ?(file=None) ?(rank_known=false) ?(rank=N
   3. DisambiguationUniqueRankMove
   4. DisambiguationNoUniqueFileOrRankMove
   *)
-(* if used with any other move, throws a RuntimeException *)
+(* if used with any other move, throws a SemanticsError *)
 let deconstruct_move = fun (m : move) (b : board) ->
   let rec deconstruct_recursively = fun ?(file_known=false) ?(file=None) ?(rank_known=false) ?(rank=None) (m : move) (b : board) ->
     match m with
       | Move(p, s) -> let src = find_src ~file_known:file_known ~file:file ~rank_known:rank_known ~rank:rank b.current_color p s b in
         (match src with 
-          | None -> raise Exceptions.RunTimeException
+          | None -> raise Exceptions.SemanticsError
           | Some(src) -> (src, s, (b.current_color, p)))
       | DisambiguationUniqueFileMove(f, m) -> deconstruct_recursively ~file_known:true ~file:(Some(f)) m b
       | DisambiguationUniqueRankMove(r, m) -> deconstruct_recursively ~rank_known:true ~rank:(Some(r)) m b
       | DisambiguationNoUniqueFileOrRankMove(f, r, m) -> deconstruct_recursively ~file_known:true ~file:(Some(f)) ~rank_known:true ~rank:(Some(r)) m b
-      | _ -> raise Exceptions.RunTimeException
+      | _ -> raise Exceptions.SemanticsError
   in
   deconstruct_recursively m b
 
